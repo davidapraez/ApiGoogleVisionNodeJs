@@ -2,6 +2,9 @@
 node_modules
 jspm_packages
 /layers
+.env
+google.json
+
 
 # Serverless directories
 .serverless
