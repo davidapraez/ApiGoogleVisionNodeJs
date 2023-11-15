@@ -1,10 +1,8 @@
 const { ImageAnnotatorClient } = require("@google-cloud/vision");
-const AWS = require("aws-sdk");
+// const AWS = require("aws-sdk");
 const visionFeatures = require("./visionFeatures");
-const dotenv = require("dotenv");
 const fs = require("fs");
 
-dotenv.config();
 // const ssm = new AWS.SSM();
 // async function getGoogleCredentials() {
 //   try {
@@ -21,7 +19,7 @@ dotenv.config();
 //   }
 // }
 const credentials = JSON.parse(
-  fs.readFileSync(process.env.GOOGLE_CREDENTIALS_PATH, "utf8")
+  fs.readFileSync('./google.json', "utf8")
 );
 const visionClient = new ImageAnnotatorClient({ credentials: credentials });
 
