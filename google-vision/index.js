@@ -22,7 +22,7 @@ exports.handler = async (event) => {
   try {
     const credentials = await getGoogleCredentials();
     const visionClient = new ImageAnnotatorClient({ credentials });
-    const body = JSON.parse(event.body);
+    const body = event.body ? JSON.parse(event.body) : event;
 
     if (!body.url) {
       return {

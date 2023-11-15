@@ -1,32 +1,28 @@
 service: google-vision
-frameworkVersion: "3"
+# frameworkVersion: "3"
 
 provider:
   name: aws
   runtime: nodejs18.x
   stage: ${opt:stage}
   region: us-east-1
-  #memorySize: 128
-  #timeout: 120
-  # environment:
-  #   GOOGLE_APPLICATION_CREDENTIALS: ${file(env.${self:provider.stage}.json)}
-  httpApi:
-    cors: false
-iam:
-  role: arn:aws:iam::073464789998:role/AwsServiceCustomRolForLambdaExecution
+  # memorySize: 256
+  # timeout: 120
+  iam:
+    role: arn:aws:iam::073464789998:role/AwsServiceCustomRolForLambdaExecution
 
 functions:
   api:
     handler: index.handler
-    #timeout: 30
-    #memorySize: 256
-    events:
-      - httpApi:
-          method: POST
-          path: /vision
+    # ephemeralStorageSize: 1024
+    # environment: ${file(env.${opt:stage, self:provider.stage}.json)}
+    # url: true
+    # events:
+    #   - httpApi:
+    #       method: POST
+    #       path: /vision
     layers:
-      - arn:aws:lambda:us-east-1:073464789998:layer:Nlp-1-1-0:3
-      - arn:aws:lambda:us-east-1:073464789998:layer:Typeorm:1
+      - arn:aws:lambda:us-east-1:073464789998:layer:google-vision-layer:1
 package:
   exclude:
     - .vscode
@@ -35,3 +31,6 @@ package:
     - .gitignore
     - "env.dev.json"
     - "env.prod.json"
+
+plugins:
+  - serverless-offline
