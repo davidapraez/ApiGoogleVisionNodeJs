@@ -2,26 +2,30 @@ const { ImageAnnotatorClient } = require("@google-cloud/vision");
 const AWS = require("aws-sdk");
 const visionFeatures = require("./visionFeatures");
 
-const ssm = new AWS.SSM();
-async function getGoogleCredentials() {
-  try {
-    const data = await ssm
-      .getParameter({
-        Name: "/google-vision/credentials",
-        WithDecryption: true,
-      })
-      .promise();
-    return JSON.parse(data.Parameter.Value);
-  } catch (error) {
-    console.error("Error al obtener las credenciales de Google: ", error);
-    throw error;
-  }
-}
+// const ssm = new AWS.SSM();
+// async function getGoogleCredentials() {
+//   try {
+//     const data = await ssm
+//       .getParameter({
+//         Name: "/google-vision/credentials",
+//         WithDecryption: true,
+//       })
+//       .promise();
+//     return JSON.parse(data.Parameter.Value);
+//   } catch (error) {
+//     console.error("Error al obtener las credenciales de Google: ", error);
+//     throw error;
+//   }
+// }
+const credentials = JSON.parse(
+  fs.readFileSync(process.env.GOOGLE_CREDENTIALS_PATH, "utf8")
+);
+const visionClient = new ImageAnnotatorClient({ credentials: credentials });
 
 exports.handler = async (event) => {
   try {
-    const credentials = await getGoogleCredentials();
-    const visionClient = new ImageAnnotatorClient({ credentials });
+    // const credentials = await getGoogleCredentials();
+    // const visionClient = new ImageAnnotatorClient({ credentials });
     const body = event.body ? JSON.parse(event.body) : event;
 
     if (!body.url) {
