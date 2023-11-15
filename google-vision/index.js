@@ -23,19 +23,15 @@ exports.handler = async (event) => {
     const credentials = await getGoogleCredentials();
     const visionClient = new ImageAnnotatorClient({ credentials });
     const body = JSON.parse(event.body);
-    let imageContent;
 
-    // Check if URL is provided in the request
-    if (body.url) {
-      imageContent = { source: { imageUri: body.url } };
-    } else if (body.image) {
-      imageContent = { content: body.image };
-    } else {
+    if (!body.url) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Image or URL not provided" }),
+        body: JSON.stringify({ error: "URL not provided" }),
       };
     }
+
+    const imageContent = { source: { imageUri: body.url } };
     const [result] = await visionClient.annotateImage({
       image: imageContent,
       features: visionFeatures,
